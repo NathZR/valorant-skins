@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mes armes Valorant</title>
+<style>
+body{margin:0;background:#0b0e14;color:#fff;font-family:Arial,sans-serif;padding:30px}
+h1{margin:0 0 20px;letter-spacing:2px}
+#search{width:100%;max-width:400px;padding:12px;border-radius:8px;border:1px solid #2a3140;background:#121722;color:#fff;font-size:15px;margin-bottom:25px}
+#grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:18px}
+.card{background:#121722;border:1px solid var(--c);border-radius:12px;padding:16px;box-shadow:0 0 14px -6px var(--c)}
+.img{position:relative;height:150px;border-radius:8px;background:radial-gradient(circle at 50% 30%,var(--c-fond),#12161f);display:flex;align-items:center;justify-content:center;overflow:hidden;color:#556}
+.img img.arme-img{max-width:95%;max-height:95%}
+.badge{position:absolute;top:8px;right:8px;width:30px;height:30px;border-radius:50%;background:#000a;border:1px solid var(--c);display:flex;align-items:center;justify-content:center}
+.badge img{width:20px;height:20px}
+.name{font-weight:bold;font-size:17px;margin:14px 0 4px}
+.arme{color:#8b93a5;font-size:13px}
+.rar{color:var(--c);font-size:12px;font-weight:bold;letter-spacing:1px;margin-top:6px}
+.prix{text-align:right;font-weight:bold;margin-top:12px;color:#fff}
+</style>
+</head>
+<body>
+
+<h1>MES ARMES VALORANT</h1>
+<input id="search" placeholder="Rechercher une arme ou un skin...">
+<div id="grid"></div>
+
+<script>
+// Les 5 raretés : couleur + petit logo officiel Valorant + prix de base
+const RARETES = {
+  Select:    { couleur: "#5a9fe2", prix: 875,  logo: "https://media.valorant-api.com/contenttiers/12683d76-48d7-84a3-4e09-6985794f0445/displayicon.png" },
+  Deluxe:    { couleur: "#009587", prix: 1275, logo: "https://media.valorant-api.com/contenttiers/0cebb8be-46d7-c12a-d306-e9907bfc5a25/displayicon.png" },
+  Premium:   { couleur: "#d1548d", prix: 1775, logo: "https://media.valorant-api.com/contenttiers/60bca009-4182-7998-dee7-b8a2558dc369/displayicon.png" },
+  Exclusive: { couleur: "#f5955b", prix: 2175, logo: "https://media.valorant-api.com/contenttiers/e046854e-406c-37f4-6607-19a9ba8426fc/displayicon.png" },
+  Ultra:     { couleur: "#fad663", prix: 2475, logo: "https://media.valorant-api.com/contenttiers/411e4a55-4e59-7757-41f0-86a53f101bb5/displayicon.png" }
+};
+
+// ============================================
+// AJOUTE TES ARMES ICI (une ligne = une case)
+// rarete = Select, Deluxe, Premium, Exclusive ou Ultra
+// prix = optionnel (sinon le prix de la rareté est utilisé)
+// image = lien (peut rester vide "")
+// ============================================
+const armes = [
+  { nom: "Reaver Vandal",       arme: "Vandal",   rarete: "Premium",   image: "" },
+  { nom: "Prime Phantom",       arme: "Phantom",  rarete: "Premium",   image: "" },
+  { nom: "Oni Phantom",         arme: "Phantom",  rarete: "Premium",   image: "" },
+  { nom: "Elderflame Operator", arme: "Operator", rarete: "Ultra",     image: "" },
+  { nom: "Glitchpop Dagger",    arme: "Mêlée",    rarete: "Exclusive", prix: 4350, image: "" },
+  { nom: ".EXE Ghost",          arme: "Ghost",    rarete: "Select",    image: "" },
+  { nom: ".SYS Sheriff",        arme: "Sheriff",  rarete: "Deluxe",    image: "" }
+];
+// ============================================
+
+const grid = document.getElementById("grid");
+const search = document.getElementById("search");
+
+function afficher() {
+  const texte = search.value.toLowerCase();
+  grid.innerHTML = "";
+  armes
+    .filter(a => (a.nom + " " + a.arme + " " + a.rarete).toLowerCase().includes(texte))
+    .forEach(a => {
+      const r = RARETES[a.rarete] || RARETES.Select;
+      const prix = a.prix || r.prix;
+      const euros = (prix * 0.00999).toFixed(2).replace(".", ",");
+      const img = a.image ? '<img class="arme-img" src="' + a.image + '" alt="">' : "pas d'image";
+      grid.innerHTML +=
+        '<div class="card" style="--c:' + r.couleur + ';--c-fond:' + r.couleur + '33">' +
+          '<div class="img">' + img +
+            '<div class="badge"><img src="' + r.logo + '" alt="" onerror="this.style.display=\'none\'"></div>' +
+          '</div>' +
+          '<div class="name">' + a.nom + '</div>' +
+          '<div class="arme">' + a.arme + '</div>' +
+          '<div class="rar">' + a.rarete.toUpperCase() + '</div>' +
+          '<div class="prix">' + prix + ' VP (≈ ' + euros + ' €)</div>' +
+        '</div>';
+    });
+}
+
+search.addEventListener("input", afficher);
+afficher();
+</script>
+
+</body>
+</html>
